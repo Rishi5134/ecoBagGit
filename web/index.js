@@ -47,12 +47,6 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
         await AppInstallations.delete(shop);
     }
 });
-Shopify.Webhooks.Registry.addHandler("PRODUCT_UPDATE", {
-    path: "/api/webhooks/orders-create",
-    webhookHandler: async (_topic, shop, _body) => {
-        await console.log("Hello from webhook shop", shop);
-    }
-});
 
 
 // The transactions with Shopify will always be marked as test transactions, unless NODE_ENV is production.
@@ -100,57 +94,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
         }
     });
     app.use(bodyparser.raw({ type: "application/json" }));
-    function verifyWebhook(payload, hmac) {
-        try {
-
-            console.log("Hello from verify webhook");
-            console.log("Payload = ", payload);
-            console.log("hmac from verify webhook = ", hmac);
-            const message = payload.toString();
-            console.log();
-            console.log("message = ", message);
-            console.log();
-            const genHash = crypto.createHmac("sha256", `${process.env.SHOPIFY_API_SECRET}`).update(message).digest("base64");
-            console.log("genHash", genHash);
-            return genHash === hmac;
-        } catch (error) {
-            console.log("verifyWebhook error", error);
-        }
-    }
-    app.post("/api/webhooks/orders-create", async (req, res) => {
-        try {
-            console.log("Welcome to webhook");
-            const hmac = req.header('X-Shopify-Hmac-Sha256');
-
-            // console.log("hmac = " + hmac);
-            const topic = req.header('X-Shopify-Topic');
-            // console.log("topic = " + topic);
-            const shop = req.header('X-Shopify-Shop-Domain');
-            // console.log("shop = " + shop);
-            // console.log("req", req);
-            const verified = verifyWebhook(req.body, hmac);
-
-
-            console.log("Webhook data", req.body);
-            const data = req.body.toString();
-            const payload = JSON.parse(data);
-            console.log(
-                `Verified webhook request. Shop: ${shop} Topic: ${topic} \n Payload: \n ${data}`
-            );
-
-            if (!verified) {
-                res.status(500).json({ message: 'Verified webhook request failed' });
-                console.log("Verified webhook request failed", payload);
-            }
-            res.status(200).send("OK");
-
-
-        } catch (e) {
-            console.log(`Failed to process webhook from api: ${e
-                }`);
-
-        }
-    });
+    
 
     // All endpoints after this point will require an active session
     app.use("/api/*", verifyRequest(app, { billing: billingSettings }));
@@ -238,13 +182,14 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
             const data = await client.query({
                 data: {
                     query: `query ($numProds: Int!, $ForwardCursor: String, $BackwardCursor: String) {
-                        orders(reverse:${reverseValue}, first: ${firstNumProd}, after: $ForwardCursor, last: ${lastNumProd}, before: $BackwardCursor) {
+                        orders(reverse:${reverseValue}, first: ${firstNumProd}, after: $ForwardCursor, last: ${lastNumProd}, before: $BackwardCursor, query:"lineItems.title:Eco Bag") {
                           edges {
                             cursor
                             node {
                               id
                               totalPrice
                               name
+                              email
                               lineItems(first: 10) {
                                 nodes {
                                   name

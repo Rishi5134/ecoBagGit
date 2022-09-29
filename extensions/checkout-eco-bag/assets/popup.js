@@ -87,17 +87,12 @@ function addToCartBTN() {
 }
 
 function idCartDrawer_Checkout() {
-    document.getElementsByClassName('cart__ctas').onclick = function(e){
-        console.log("Hello cart__ctas");
-        e.preventDefault();
 
-        modalTogal(9999);
-    }
-    document.getElementById('CartDrawer-Checkout').onclick = function (e) {
+    document.getElementById('CartDrawer-Checkout').addEventListener("click",function (e) {
         e.preventDefault();
         console.log("idCartDrawer_Checkout");
         modalTogal(9999);
-    }
+    } ) 
 }
 function idcart_notification_form() {
     document.getElementById('cart-notification-form').onclick = function (e) {

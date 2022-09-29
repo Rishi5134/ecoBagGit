@@ -20,6 +20,7 @@ const Orders = () => {
     const [nextPage, setNextPage] = useState(null);
     const [firstNumProd, setFirstNumProd] = useState("$numProds");
     const [lastNumProd, setLastNumProd] = useState(null);
+    const [customerEmail, setCustomerEmail] = useState("");
 
     const prevData = () => {
         setBackwardCursor(backwardCursorString)
@@ -96,23 +97,26 @@ const Orders = () => {
         [
             item.node.lineItems.nodes.map((i) => (<><h1>{i.title}</h1></>)),
         ],
+        [
+            item.node.email,
+        ],
         // [
         //     `${item.node.variants.nodes[0].price}`
         //     // }`,
         // ],
 
-        [
-            <div onClick={
-                () => getSingleOrder(item.node.id)
-            }>
-                <Button onClick={toggleModal}><EditMajor />
-                </Button>
-            </div>,
+        // [
+        //     <div onClick={
+        //         () => getSingleOrder(item.node.id)
+        //     }>
+        //         <Button onClick={toggleModal}><EditMajor />
+        //         </Button>
+        //     </div>,
 
-            // <EditMajor onClick={
-            //     () => getSingleProdGql(item.node.id)
-            // }/>,
-        ],
+        //     // <EditMajor onClick={
+        //     //     () => getSingleProdGql(item.node.id)
+        //     // }/>,
+        // ],
         // [
 
         //     <div style={
@@ -175,6 +179,7 @@ const Orders = () => {
         setPrevPage(data.body.data.orders.pageInfo.hasPreviousPage)
         setNextPage(data.body.data.orders.pageInfo.hasNextPage)
         setOrders(data.body.data.orders.edges);
+        // setCustomerEmail(data.body.data.orders.edges);
     }
     console.log("forwardCursor", forwardCursor);
     console.log("backwardCursor", backwardCursor);
@@ -208,7 +213,7 @@ const Orders = () => {
                         "Ordered Items",
 
 
-                        "Edit",
+                        "Email",
 
                     ]
                 }
