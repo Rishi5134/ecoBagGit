@@ -80,7 +80,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
 
     app.set("use-online-tokens", USE_ONLINE_TOKENS);
     app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
-
+    app.use(express.json())
     applyAuthMiddleware(app, { billing: billingSettings });
 
     // Do not call app.use(express.json()) before processing webhooks with
@@ -224,30 +224,53 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
             console.log("Error" + error);
         }
     })
-    app.get('/api/orders', async (req, res) => {
+    app.post('/api/orders', async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
         try {
             const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+            const { reverseValue, searchCategory, forwardCursor, backwardCursor, firstNumProd, lastNumProd } = req.body
+            console.log("forwardcursor", forwardCursor);
+            const variables = {
+                "numProds": 7,
+                "ForwardCursor": forwardCursor,
+                "BackwardCursor": backwardCursor
+            }
             const data = await client.query({
-                data: `{
-                          orders(first: 10) {
-                            edges {
-                              node {
-                                id
-                                totalPrice
-                                name
-                                lineItems(first: 10) {
-                                  nodes {
-                                    name
-                                    title 
-                                    variantTitle
-                                  }
+                data: {
+                    query: `query ($numProds: Int!, $ForwardCursor: String, $BackwardCursor: String) {
+                        orders(reverse:${reverseValue}, first: ${firstNumProd}, after: $ForwardCursor, last: ${lastNumProd}, before: $BackwardCursor) {
+                          edges {
+                            cursor
+                            node {
+                              id
+                              totalPrice
+                              name
+                              lineItems(first: 10) {
+                                nodes {
+                                  name
+                                  title
+                                  variantTitle
+                                  id
                                 }
                               }
                             }
                           }
-                        }`});
+                          pageInfo {
+                            startCursor
+                            hasNextPage
+                            hasPreviousPage
+                            endCursor
+                          }
+                        }
+                      }
+                      `,
+
+                    variables: variables
+                }
+
+            });
             res.status(200).json(data);
+            // console.log("Data", data);
         } catch (error) {
             console.log("Error" + error);
             res.status(200).json(error);

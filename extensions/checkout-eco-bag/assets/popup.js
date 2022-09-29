@@ -7,6 +7,7 @@ function addJqueryScript() {
     console.log("Script Added");
 }
 function addAxioscript() {
+
     var script = document.createElement('script');
     script.src = 'https://unpkg.com/axios/dist/axios.min.js';
     document.getElementsByTagName('head')[0].appendChild(script);
@@ -18,8 +19,6 @@ function addAxioscript() {
     script1.referrerpolicy = 'no-referrer';
     document.getElementsByTagName('head')[0].appendChild(script1);
  
-
-
     var script2 = document.createElement('script');  
     script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.js';
     script2.integrity = 'sha512-rozBdNtS7jw9BlC76YF1FQGjz17qQ0J/Vu9ZCFIW374sEy4EZRbRcUZa2RU/MZ90X2mnLU56F75VfdToGV0RiA==';
@@ -87,15 +86,6 @@ function addToCartBTN() {
     document.getElementById('addBtn').addEventListener('click', addToCartEcoBag);
 }
 
-function cart__ctas() {
-    document.getElementsByClassName('cart__ctas').onclick = function(e){
-        console.log("Hello cart__ctas");
-        e.preventDefault();
-
-        modalTogal(9999);
-    }
-
-}
 function idCartDrawer_Checkout() {
     document.getElementsByClassName('cart__ctas').onclick = function(e){
         console.log("Hello cart__ctas");
@@ -126,10 +116,7 @@ if (document.getElementById('checkout')) {
     console.log('Hello checkout');
     idcheckout();
 }
-if (document.getElementsByClassName('cart__ctas')) {
-    console.log('Hello cart__ctas');
-    cart__ctas();
-}
+
 if (document.getElementById('CartDrawer-Checkout')) {
     console.log('Hello CartDrawer-Checkout');  
     idCartDrawer_Checkout();
