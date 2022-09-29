@@ -1,0 +1,18 @@
+{%- comment -%} {{ 'popup.css' | asset_url | stylesheet_tag }} {%- endcomment -%}
+<!-- <button id="checkoutBtn" class="myCheckout button button--primary button--full-width">My Checkout</button> -->
+<!-- <button id="orderBtn" class="newOrder button button--primary button--full-width">Create Order</button> -->
+<!-- <div class="popupmodal" id="popupmodal" style="position: fixed;">
+    <p>Hello from modal</p>
+</div> -->
+
+{%- comment -%} 
+<script src="{{ 'popup.js' | asset_url }}" defer></script> {%- endcomment -%}
+{% schema %}
+{
+        "name": "My Checkout",
+        "target": "section",
+        "settings": [
+            { "label": "Color", "id": "color", "type": "color", "default": "#000000" }
+        ]
+      }
+{% endschema %}

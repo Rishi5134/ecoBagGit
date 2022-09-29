@@ -1,0 +1,114 @@
+.popupmodal, #popupmodal {
+    display: none;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.307) !important;
+    top: 0;
+
+}
+.mainBlock {
+    width: 90rem;
+    height: 47rem;
+    background-color: white;
+    box-shadow: 20px 20px 20px black;
+    border-radius: 8px;
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+}
+#closeModal {
+    float: right !important;
+}
+.prodImage{
+    width: auto;
+    height: 200px;
+}
+.innerBlock1{
+    min-height: 6vh;
+    /* border-bottom: 1px solid rgb(175 175 175); */
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.innerBlock1 > i:hover{
+    cursor: pointer;
+}
+
+.innerBlock2 {
+ 
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    align-items: center;
+    background-color: rgb(196, 193, 200); 
+    min-height: 30rem;
+    /* margin: auto; */
+}
+.innerBlock2 > div{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    width: 100%;
+    flex-wrap: wrap;
+} 
+.innerBlock3{ 
+    margin: 1rem;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    /* border-top: 1px solid rgb(175 175 175); */
+}
+.innerBlock3 > button {
+
+margin-left: 1rem;
+/* margin-top: 1rem; */
+}
+#noThanks:hover{
+/* box-shadow: 3px 3px 5px solid red; */
+/* border: 1px solid red; */
+/* margin: 0px; */
+color: blue;
+cursor: pointer;
+}
+#noThanks{
+    /* padding: 0 3rem; */
+    background-color: transparent !important;
+    border: none;
+    outline: none;
+    color: red;
+    /* padding: 0%; */
+    /* margin: 1px; */
+}
+#productTitle{
+    text-transform: uppercase;
+}
+@media screen and (max-width: 463px) {
+    #noThanks{
+        /* padding: 0 3rem; */
+       margin: 1rem 0;
+        /* padding: 0%; */
+        /* margin: 1px; */
+    }
+}
+@media screen and (max-width: 970px) {
+    .mainBlock {
+        margin: 0 5rem;
+    }
+}
+@media screen and (max-width: 590px) { 
+    .mainBlock {
+    height: max-content;
+    }
+    .innerBlock3{
+        justify-content: center;
+        align-items: center;
+    }
+}
+@media screen and (max-width: 310px) {
+    .prodImage{
+        width: auto;
+        height: auto;
+    }
+
+}
