@@ -190,6 +190,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
                               totalPrice
                               name
                               email
+                              discountCode
                               lineItems(first: 10) {
                                 nodes {
                                   name

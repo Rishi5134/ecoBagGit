@@ -18,6 +18,7 @@
 }
 #closeModal {
     float: right !important;
+    color: black;
 }
 .prodImage{
     width: auto;
@@ -82,6 +83,7 @@ cursor: pointer;
 }
 #productTitle{
     text-transform: uppercase;
+    color: black;
 }
 .desc{
     height: 6rem;

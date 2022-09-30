@@ -31,14 +31,18 @@ function addAxioscript() {
 
 addJqueryScript();
 addAxioscript();
-function ecoBagFunc() {
+async function ecoBagFunc() {
+    const data2 = await axios.get(window.Shopify.routes.root + 'admin/currencies.json',);
+    console.log("DAta", data2);
+    console.log("USD = ", ShopifyAnalytics.meta.currency); 
+
     jQuery.getJSON(window.Shopify.routes.root + 'products/eco-bag.js', function (product) {
         // alert('The title of this product is ' + product.title);
         document.getElementById('productTitle').innerHTML = `ADD ${product.title}`;
         document.getElementById('productDescription').innerHTML = product.description;
-        console.log(product.variants[0].price);
+        console.log(product.variants[0].price); 
         document.getElementById('productImage').src = product.images[0]
-        document.getElementById('productPrice').innerHTML = `$${product.variants[0].price}`
+        document.getElementById('productPrice').innerHTML = `${ShopifyAnalytics.meta.currency === 'USD'? "$" : ShopifyAnalytics.meta.currency } ${product.variants[0].price}`
         // document.getElementById('productPrice').innerHTML = product.variants[0].price
     });
 
@@ -58,10 +62,11 @@ async function addToCartEcoBag() {
         headers: {
             "Content-Type": "application/json",
         },
-        data: JSON.stringify(cartData),
+        data: JSON.stringify(cartData),  
     }
     const { data } = await axios.post(window.Shopify.routes.root + "cart/add.js", cartData, config)
     console.log("data", data);
+   
     location.replace(window.Shopify.routes.root + 'checkout.js').then(() => console.log("redirected"))
 }
 
@@ -85,14 +90,15 @@ function addToCartBTN() {
 
     document.getElementById('addBtn').addEventListener('click', addToCartEcoBag);
 }
-
+    
 function idCartDrawer_Checkout() {
 
     document.getElementById('CartDrawer-Checkout').addEventListener("click",function (e) {
+    
         e.preventDefault();
         console.log("idCartDrawer_Checkout");
         modalTogal(9999);
-    } ) 
+    })
 }
 function idcart_notification_form() {
     document.getElementById('cart-notification-form').onclick = function (e) {
@@ -100,11 +106,14 @@ function idcart_notification_form() {
         modalTogal(6);
     }
 }
+
 function idcheckout() {
     document.getElementById('checkout').onclick = function (e) {
         e.preventDefault();
+        
         modalTogal(6);
     }
+    
 }
 
 if (document.getElementById('checkout')) {
@@ -114,7 +123,7 @@ if (document.getElementById('checkout')) {
 
 if (document.getElementById('CartDrawer-Checkout')) {
     console.log('Hello CartDrawer-Checkout');  
-    idCartDrawer_Checkout();
+     idCartDrawer_Checkout();
 }
 if (document.getElementById('cart-notification-form')) {
     console.log('Hello cart-notification-form');
@@ -143,3 +152,11 @@ function modalTogal(popZIndex) {
         closeModalBTN()
     }
 }
+async function getData(){
+   
+}
+getData()
+
+function findUSD(USD) {
+    return USD = "$"
+  }
