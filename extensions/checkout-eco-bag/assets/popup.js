@@ -42,8 +42,9 @@ async function ecoBagFunc() {
         document.getElementById('productDescription').innerHTML = product.description;
         console.log(Math.ceil(product.variants[0].price) / 100);   
         document.getElementById('productImage').src = product.images[0]
-        document.getElementById('productPrice').innerHTML = `${ShopifyAnalytics.meta.currency === 'USD'? "$" : ShopifyAnalytics.meta.currency } ${ (product.variants[0].price)/100 }`
+        document.getElementById('productPrice').innerHTML = `${ShopifyAnalytics.meta.currency} ${ (product.variants[0].price)/100 }`
         // document.getElementById('productPrice').innerHTML = product.variants[0].price
+
     });
 
 }
@@ -92,7 +93,10 @@ function addToCartBTN() {
 }
     
 function idCartDrawer_Checkout() {
-
+    // document.getElementById('CartDrawer-Checkout').addEventListener("mouseover", function(e){
+    // e.preventDefault();
+    // console.log("idCartDrawer_Checkout22");
+    //   })
     document.getElementById('CartDrawer-Checkout').addEventListener("click",function (e) {
     
         e.preventDefault();
@@ -160,3 +164,4 @@ getData()
 function findUSD(USD) {
     return USD = "$"
   }
+
