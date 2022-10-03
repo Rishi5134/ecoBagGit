@@ -22,9 +22,9 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()
-    }/frontend/`;
+    }/web/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()
-    }/frontend/dist/`;
+    }/web/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()
     }/database.sqlite`;
@@ -37,7 +37,7 @@ Shopify.Context.initialize({
     HOST_SCHEME: process.env.HOST.split("://")[0],
     API_VERSION: LATEST_API_VERSION,
     IS_EMBEDDED_APP: true,
-    
+
     // This should be replaced with your preferred storage strategy
     SESSION_STORAGE: new Shopify.Session.SQLiteSessionStorage(DB_PATH)
 });
