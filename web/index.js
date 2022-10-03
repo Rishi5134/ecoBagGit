@@ -13,7 +13,7 @@ import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import bodyparser from 'body-parser'
 import crypto from 'crypto'
-
+ 
 const router = express.Router();
 
 const USE_ONLINE_TOKENS = false;
@@ -37,6 +37,7 @@ Shopify.Context.initialize({
     HOST_SCHEME: process.env.HOST.split("://")[0],
     API_VERSION: LATEST_API_VERSION,
     IS_EMBEDDED_APP: true,
+    
     // This should be replaced with your preferred storage strategy
     SESSION_STORAGE: new Shopify.Session.SQLiteSessionStorage(DB_PATH)
 });
