@@ -1,0 +1,13 @@
+.errorBlock > svg {
+    width: 10vmax;
+    height: 10vmax;
+    margin-bottom: 1rem;
+    color: orange;
+}
+.errorBlock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0rem;
+    flex-direction: column;
+}
