@@ -29,6 +29,7 @@ const PROD_INDEX_PATH = `${process.cwd()
 const DB_PATH = `${process.cwd()
     }/database.sqlite`;
 
+    
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
     API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
