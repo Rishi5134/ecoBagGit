@@ -27,6 +27,8 @@ extensions/*/build
 # Node library SQLite database
 web/database.sqlite
 
+#extensions folder
+extensions
 # Partners can use npm, yarn or pnpm with the CLI.
 # We ignore lock files so they don't get a package manager mis-match
 # Without this, they may get a warning if using a different package manager to us
