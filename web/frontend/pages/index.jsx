@@ -16,7 +16,6 @@ import { ProductsCard } from "../components";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 import { useEffect } from "react";
 import Orders from "../components/Orders";
-import Orders2 from "../components/Orders2";
 
 export default function HomePage() {
   const app = useAppBridge();
@@ -66,7 +65,6 @@ export default function HomePage() {
         <Layout.Section>
           <Card sectioned>
            <Orders/>
-           {/* <Orders2/> */}
           </Card>
         </Layout.Section>
       

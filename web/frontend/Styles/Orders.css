@@ -2,3 +2,18 @@
     display: flex;
     justify-content: center;
 }
+.headingBlock > h1{
+    font-size: 1.5rem;
+}
+.headingBlock{
+    display: flex;
+    justify-content: center;
+    padding: 0rem 0rem 1rem 0rem;
+    border-bottom: 1px solid black;
+}
+.tableBlock{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+}

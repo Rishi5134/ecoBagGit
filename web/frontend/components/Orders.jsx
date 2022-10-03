@@ -3,8 +3,10 @@ import { getSessionToken } from "@shopify/app-bridge-utils"
 import { Button, DataTable, Pagination } from "@shopify/polaris";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { EditMajor, DeleteMajor } from '@shopify/polaris-icons';
 import '../Styles/Orders.css';
+import Loading from "./Loader/Loading";
+import NoOrdersFound from "./NoOrders/NoOrdersFound";
+import LoadError from "./Error/LoadError";
 
 const Orders = () => {
     const app = useAppBridge();
@@ -20,7 +22,14 @@ const Orders = () => {
     const [nextPage, setNextPage] = useState(null);
     const [firstNumProd, setFirstNumProd] = useState("$numProds");
     const [lastNumProd, setLastNumProd] = useState(null);
-    const [customerEmail, setCustomerEmail] = useState("");
+    const [ordersCount, setordersCount] = useState(0);
+    const [pageNumber, setpageNumber] = useState(1);
+    const [loadingSucceded, setloadingSucceded] = useState(true);
+    const [noOrdersFound, setNoOrdersFound] = useState(false);
+    const [error, seterror] = useState(false);
+console.log("noOrdersFound", noOrdersFound);
+    console.log("LoadingSucceded", loadingSucceded);
+
 
     const prevData = () => {
         setBackwardCursor(backwardCursorString)
@@ -30,6 +39,7 @@ const Orders = () => {
         if (prevPage === false) {
             setBackwardCursor(null)
         }
+        setpageNumber(pageNumber - 1)
         // getAllOrders(queryFilters)
     }
     const nextData = () => {
@@ -41,7 +51,7 @@ const Orders = () => {
         if (nextPage === false) {
             setForwardCursor(null)
         }
-        // getAllOrders(queryFilters);
+        setpageNumber(pageNumber + 1)
     }
 
     const cssNextEnable = `
@@ -64,14 +74,10 @@ const Orders = () => {
     pointer-events: auto !important;
 }
 `
-    // if (orders) {
 
-    //     setLineItems(orders.node.lineItems)
-    //     console.log("LineItems", lineItems);
-    // }
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10
-    const count = orders.length
+    const count = ordersCount
     const totalPages = Math.ceil(count / rowsPerPage)
     console.log("Total pages: " + totalPages);
     const calculatedRows = orders.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
@@ -81,8 +87,6 @@ const Orders = () => {
 
     const [active, setActive] = useState(false);
     const toggleModal = useCallback(() => setActive((active) => !active), []);
-
-
 
 
     const rows2 = calculatedRows.map((item) => ([
@@ -99,6 +103,9 @@ const Orders = () => {
         ],
         [
             item.node.email,
+        ],
+        [
+            item.node.totalPrice,
         ],
         // [
         //     `${item.node.variants.nodes[0].price}`
@@ -163,6 +170,7 @@ const Orders = () => {
     const getAllOrders = async (queryFilters) => {
         const token = await getSessionToken(app);
         console.log("token:-", token);
+        setloadingSucceded(true)
         const config = {
             headers: {
                 Authorization: "Bearer " + token,
@@ -172,13 +180,25 @@ const Orders = () => {
         }
         const { data } = await axios.post('/api/orders', queryFilters, config);
         console.log("All orders", data)
-   
-    
-        setForwardCursorString(data.body.data.orders.pageInfo.endCursor)
-        setBackwardCursorString(data.body.data.orders.pageInfo.startCursor)
-        setPrevPage(data.body.data.orders.pageInfo.hasPreviousPage)
-        setNextPage(data.body.data.orders.pageInfo.hasNextPage)
-        setOrders(data.body.data.orders.edges);
+        if (data.success === true) {
+            setloadingSucceded(false);
+        }
+        
+        if (data.success === false) {
+            setloadingSucceded(true);
+            seterror(true)
+        }
+        setordersCount(data.ordersCount.count)
+        setForwardCursorString(data.data.body.data.orders.pageInfo.endCursor)
+        setBackwardCursorString(data.data.body.data.orders.pageInfo.startCursor)
+        setPrevPage(data.data.body.data.orders.pageInfo.hasPreviousPage)
+        setNextPage(data.data.body.data.orders.pageInfo.hasNextPage)
+        setOrders(data.data.body.data.orders.edges);
+        if (data.ordersCount.count === 0) {
+            setloadingSucceded(false);
+            setNoOrdersFound(true)
+        }
+
         // setCustomerEmail(data.body.data.orders.edges);
     }
     console.log("forwardCursor", forwardCursor);
@@ -192,42 +212,59 @@ const Orders = () => {
     }, [reverseValue, searchCategory, forwardCursor, backwardCursor, nextPage, prevPage, firstNumProd, lastNumProd])
     return (
         <>
-        {
-            nextPage !== true ? <style>{cssNextEnable}</style> : <style>{cssNextDisable}</style>
-        }
-        {
-            prevPage !== true ? <style>{cssPrevDisable}</style> : <style>{cssPrevEnable}</style>
-        }
-            <h1>Orders</h1>
-            <DataTable columnContentTypes={
-                [
-                    "text",
-                    "text",
-                    "text",
-
-                ]
+            {
+                nextPage !== true ? <style>{cssNextEnable}</style> : <style>{cssNextDisable}</style>
             }
-                headings={
-                    [
-                        "Order",
-                        "Ordered Items",
+            {
+                prevPage !== true ? <style>{cssPrevDisable}</style> : <style>{cssPrevEnable}</style>
+            }
+            <div className="headingBlock">
+                <h1>Eco Bag Orders</h1>
+            </div>
 
 
-                        "Email",
+            {error === true ? <LoadError />:(<>
+            
+            {!loadingSucceded === false ? <Loading /> : (
+                <>
+                {!ordersCount ? (<NoOrdersFound />):(<>
 
-                    ]
-                }
-                rows={rows2}
-                footerContent={
-                    `Showing ${currentPage} of ${totalPages} results`
-                } />
-                <div className="ordersPagination">
-                <Pagination hasPrevious
-                onPrevious={prevData}
-                hasNext
-                onNext={nextData} />
-                </div>
+                    <div className="tableBlock">
+                        <DataTable columnContentTypes={
+                            [
+                                "text",
+                                "text",
+                                "text",
+                                "numeric"
+                            ]
+                        }
+                            headings={
+                                [
+                                    "Order",
+                                    "Ordered Items",
+                                    "Email",
+                                    "Total Price"
+                                ]
+                            }
+                            rows={rows2}
+                            footerContent={
+                                `Showing ${pageNumber} of ${totalPages} results`
+                            } />
+                        <div className="ordersPagination">
+                            <Pagination hasPrevious
+                                onPrevious={prevData}
+                                hasNext
+                                onNext={nextData} />
+                        </div>
 
+                    </div>
+
+                </>)}
+
+                </>
+            )}
+                
+            </>)}
         </>
     )
 }

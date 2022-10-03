@@ -174,8 +174,15 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
             const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
             const { reverseValue, searchCategory, forwardCursor, backwardCursor, firstNumProd, lastNumProd } = req.body
             console.log("forwardcursor", forwardCursor);
+
+            const {Order} = await import('@shopify/shopify-api/dist/rest-resources/2022-07/index.js');
+// const test_session = await Shopify.Utils.loadCurrentSession(req, res);
+const ordersCount = await Order.count({
+  session: session,
+  status: "any",
+});
             const variables = {
-                "numProds": 7,
+                "numProds": 2,
                 "ForwardCursor": forwardCursor,
                 "BackwardCursor": backwardCursor
             }
@@ -215,11 +222,14 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
                 }
 
             });
-            res.status(200).json(data);
-            // console.log("Data", data);
+            const ordersCount2 = {
+                count:0
+            }
+            res.status(200).json({data, ordersCount,success:true});
+            
         } catch (error) {
             console.log("Error" + error);
-            res.status(200).json(error);
+            res.status(200).json({error, success:false});
         }
     })
     app.get("/api/products/create", async (req, res) => {

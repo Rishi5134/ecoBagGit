@@ -40,9 +40,9 @@ async function ecoBagFunc() {
         // alert('The title of this product is ' + product.title);
         document.getElementById('productTitle').innerHTML = `ADD ${product.title}`;
         document.getElementById('productDescription').innerHTML = product.description;
-        console.log(product.variants[0].price); 
+        console.log(Math.ceil(product.variants[0].price) / 100);   
         document.getElementById('productImage').src = product.images[0]
-        document.getElementById('productPrice').innerHTML = `${ShopifyAnalytics.meta.currency === 'USD'? "$" : ShopifyAnalytics.meta.currency } ${product.variants[0].price}`
+        document.getElementById('productPrice').innerHTML = `${ShopifyAnalytics.meta.currency === 'USD'? "$" : ShopifyAnalytics.meta.currency } ${ (product.variants[0].price)/100 }`
         // document.getElementById('productPrice').innerHTML = product.variants[0].price
     });
 
