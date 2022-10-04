@@ -13,7 +13,7 @@ import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import bodyparser from 'body-parser'
 import crypto from 'crypto'
- 
+
 const router = express.Router();
 
 const USE_ONLINE_TOKENS = false;
@@ -29,7 +29,7 @@ const PROD_INDEX_PATH = `${process.cwd()
 const DB_PATH = `${process.cwd()
     }/database.sqlite`;
 
-    
+
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
     API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -96,7 +96,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
         }
     });
     app.use(bodyparser.raw({ type: "application/json" }));
-    
+
 
     // All endpoints after this point will require an active session
     app.use("/api/*", verifyRequest(app, { billing: billingSettings }));
@@ -177,12 +177,12 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
             const { reverseValue, searchCategory, forwardCursor, backwardCursor, firstNumProd, lastNumProd } = req.body
             console.log("forwardcursor", forwardCursor);
 
-            const {Order} = await import('@shopify/shopify-api/dist/rest-resources/2022-07/index.js');
-// const test_session = await Shopify.Utils.loadCurrentSession(req, res);
-const ordersCount = await Order.count({
-  session: session,
-  status: "any",
-});
+            const { Order } = await import('@shopify/shopify-api/dist/rest-resources/2022-07/index.js');
+            // const test_session = await Shopify.Utils.loadCurrentSession(req, res);
+            const ordersCount = await Order.count({
+                session: session,
+                status: "any",
+            });
             const variables = {
                 "numProds": 2,
                 "ForwardCursor": forwardCursor,
@@ -225,13 +225,13 @@ const ordersCount = await Order.count({
 
             });
             const ordersCount2 = {
-                count:0
+                count: 0
             }
-            res.status(200).json({data, ordersCount,success:true});
-            
+            res.status(200).json({ data, ordersCount, success: true });
+
         } catch (error) {
             console.log("Error" + error);
-            res.status(200).json({error, success:false});
+            res.status(200).json({ error, success: false });
         }
     })
     app.get("/api/products/create", async (req, res) => {
