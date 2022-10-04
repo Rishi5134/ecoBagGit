@@ -1,0 +1,43 @@
+{{ 'popup.css' | asset_url | stylesheet_tag }}
+<div class="popupmodal" id="popupmodal" style="position: fixed;">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <div class="mainBlock" id="mainModal">
+        <div class="innerBlock1">
+            <h2 id="productTitle" class="productTitle"></h2>
+            <i class="fa fa-close" id="closeModal" style="font-size:36px"></i>
+
+        </div>
+        <div class="innerBlock2">
+            <div>
+                <div class="prodImage">
+
+                    <img id="productImage" src="" alt="product" loading="lazy" width="200" height="200"/>
+                </div>
+                <div class="prodData">
+                    <div class="desc">
+
+                        <h3 id="productDescription" class="productDescription"></h3>
+                    </div>
+                    {{ currency.name }}
+                    <h1 id="productPrice" class="productPrice"></h1>
+                </div>
+            </div>
+        </div>
+        <div class="innerBlock3">
+
+            <button class="addBtn button button--secondary" id="addBtn">Add To Cart</button>
+            <button id="noThanks">No Thanks :(</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ 'popup.js' | asset_url }}" defer></script>
+{% schema %}
+{
+        "name": "My Checkout Embed",
+        "target": "body",
+        "settings": [
+            { "label": "Color", "id": "color", "type": "color", "default": "#000000" }
+        ]
+      }
+{% endschema %}
