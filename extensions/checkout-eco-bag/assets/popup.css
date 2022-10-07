@@ -8,7 +8,7 @@
 }
 .mainBlock {
     width: 90rem;
-    height: 47rem;
+    height: 50rem;
     background-color: white;
     box-shadow: 20px 20px 20px black;
     border-radius: 8px;
@@ -90,6 +90,24 @@ cursor: pointer;
     width: 25rem;
     overflow: hidden;
 }
+
+.variantTitle:hover{
+    cursor: pointer;
+    background-color: #883e3e;
+}
+.variantTitle{
+    color: white;
+    margin: 1rem 0.5rem;
+    background-color: indianred;
+    width: 7rem;
+    height: 3rem;
+    border-radius: 10px;
+    transition: all 0.5s;
+
+}
+
+/* responsive */
+
 @media screen and (max-width: 463px) {
     #noThanks{
         /* padding: 0 3rem; */

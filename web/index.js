@@ -22,9 +22,9 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd()
-    }/web/frontend/`;
+    }/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()
-    }/web/frontend/dist/`;
+    }/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()
     }/database.sqlite`;
