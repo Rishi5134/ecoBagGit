@@ -177,7 +177,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
             const { reverseValue, searchCategory, forwardCursor, backwardCursor, firstNumProd, lastNumProd } = req.body
             console.log("forwardcursor", forwardCursor);
 
-            const { Order } = await import('@shopify/shopify-api/dist/rest-resources/2022-07/index.js');
+            const { Order } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`);
             // const test_session = await Shopify.Utils.loadCurrentSession(req, res);
             const ordersCount = await Order.count({
                 session: session,
