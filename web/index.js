@@ -184,7 +184,7 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
                 status: "any",
             });
             const variables = {
-                "numProds": 2,
+                "numProds": 7,
                 "ForwardCursor": forwardCursor,
                 "BackwardCursor": backwardCursor
             }
