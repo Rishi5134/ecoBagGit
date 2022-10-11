@@ -76,7 +76,7 @@ console.log("noOrdersFound", noOrdersFound);
 `
 
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 7
+    const rowsPerPage = 10
     const count = ordersCount
     const totalPages = Math.ceil(count / rowsPerPage)
     console.log("Total pages: " + totalPages);
@@ -102,7 +102,7 @@ console.log("noOrdersFound", noOrdersFound);
             item.node.lineItems.nodes.map((i) => (<><h1>{i.title}</h1></>)),
         ],
         [
-            item.node.email,
+            item.node.email === null? "Not Provided" : item.node.email,
         ],
         [
             item.node.totalPrice,
@@ -248,7 +248,8 @@ console.log("noOrdersFound", noOrdersFound);
                             }
                             rows={rows2}
                             footerContent={
-                                `Showing ${pageNumber} of ${totalPages} results`
+                                // `Showing ${pageNumber} of ${totalPages} pages`
+                                ` Page: ${pageNumber}`
                             } />
                         <div className="ordersPagination">
                             <Pagination hasPrevious
