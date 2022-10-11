@@ -58,7 +58,6 @@ async function ecoBagFunc() {
                     document.getElementById("productImage").src =  product.images[0];
                     document.getElementById("addToCartID").innerHTML = product.variants[0].id;
                     console.log(document.getElementById('addToCartID').innerHTML);
-                    
             }
             console.log(product.variants);
             console.log("Length of variants: ", product.variants.length);
@@ -66,33 +65,40 @@ async function ecoBagFunc() {
                 "productTitle"
             ).innerHTML = `ADD ${product.title}`;
             // document.getElementById("variantTitle").innerHTML = product.variants.map((i) => (`${i.title}`));
-            
-            $('#variantSelector').append(product.variants.map((i,index) => `<button class='variantTitle'  id='${i.id}' value='${i.title}' >${i.title}</button>`));
+            if ($('.variantTitle').length >= product.variants.length) {
+                $('#variantSelector').append(product.variants.map((i,index) => 
+                     `<button class='variantTitle visually-hidden'  id='${i.id}' value='${i.title}' >${i.title}</button>`
+                     ));
+            } else {
+             $('#variantSelector').append(product.variants.map((i,index) => 
+                  `<button class='variantTitle'  id='${i.id}' value='${i.title}' >${i.title}</button>`
+                  ));    
+            }
+                  console.log($('.variantTitle').length);
+                
             document.getElementById("productDescription").innerHTML =
             product.description;
-            
             product.variants.map((i) => document.getElementById(i.id).addEventListener('click', function(){
                 console.log("We are done bro...", i.id);
                 document.getElementById("productPrice").innerHTML =  `${ShopifyAnalytics.meta.currency} ${i.price / 100}`
                 document.getElementById("productImage").src =  i.featured_image.src 
                 document.getElementById("addToCartID").innerHTML = i.id;
-                console.log(document.getElementById('addToCartID').innerHTML);
-                
+                console.log(i.title);
             }))
-
+                
         }
     );
 }
 
 async function addToCartEcoBag() {
 
-    const ecoBagData = await fetch(window.Shopify.routes.root + 'admin/products.json', {
-        method: 'GET',
-    }).then(response => response.json())
-        .then(data => { return data }).catch((err) => console.log(err));
-    console.log("Eco Bag Data", ecoBagData.products);
-    var obj = ecoBagData.products.find((o) => o.title === "Eco Bag");
-    console.log("obj", obj.variants[0].id);
+    // const ecoBagData = await fetch(window.Shopify.routes.root + 'admin/products.json', {
+    //     method: 'GET',
+    // }).then(response => response.json())
+    //     .then(data => { return data }).catch((err) => console.log(err));
+    // console.log("Eco Bag Data", ecoBagData);  
+    // var obj = ecoBagData.products.find((o) => o.title === "Eco Bag");
+    // console.log("obj", obj.variants[0].id);
 
     const cartData = {
         items: [
