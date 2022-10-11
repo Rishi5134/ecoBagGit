@@ -24,6 +24,9 @@ dist/
 # extensions build output
 extensions/*/build
 
+# extensions folder
+extensions
+
 # Node library SQLite database
 web/database.sqlite
 
