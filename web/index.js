@@ -26,6 +26,7 @@ const DEV_INDEX_PATH = `${process.cwd()
 const PROD_INDEX_PATH = `${process.cwd()
     }/web/frontend/dist/`;
 
+    
 const DB_PATH = `${process.cwd()
     }/database.sqlite`;
 
