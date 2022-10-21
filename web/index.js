@@ -13,6 +13,7 @@ import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 import bodyparser from 'body-parser'
 import crypto from 'crypto'
+import { allEcoOrders, allProducts, singleOrder, singleProduct } from "./Controllers/OrderController.js";
 
 const router = express.Router();
 
@@ -22,9 +23,9 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
 const DEV_INDEX_PATH = `${process.cwd() 
-    }/web/frontend/`;
+    }/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()
-    }/web/frontend/dist/`;
+    }/frontend/dist/`;
 
     
 const DB_PATH = `${process.cwd()
@@ -115,125 +116,27 @@ export async function createServer(root = process.cwd(), isProd = process.env.NO
         const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
         const { Product } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION
             }/index.js`);
+singleProduct(req, res,session,  Product)
 
-        try {
-            let id = req.params.id
-            const singleProduct = await Product.find({ session, id });
-            // console.log(singleProduct);
-            res.status(200).send(singleProduct);
-        } catch (error) {
-            console.log(error);
-            res.status(500).send(error);
-        }
     })
 
     app.get('/api/products', async (req, res) => {
-        try {
-            const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
-            console.log("Session: " + session?.accessToken);
-            const { Product } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION
-                }/index.js`);
-            const products = await Product.all({ session });
-            // console.log("Products", products);
-            res.status(200).json({ products })
-
-        } catch (error) {
-            console.log("Error" + error);
-            res.status(500).json({ error })
-        }
+        const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
+        const { Product } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION
+            }/index.js`);
+     allProducts(req, res, session, Product)
     })
     app.get('/api/order/:id', async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
-        try {
-            const ID = req.params.id;
-            console.log("Order ID", ID);
-            const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-            const order = await client.query({
-                data: `{
-          order(id: "gid://shopify/Order/3937586544769") {
-            canMarkAsPaid
-            email
-            id
-            lineItems(first: 10) {
-              nodes {
-                id
-                title
-              }
-            }
-            name
-            totalPrice
-            totalTax
-          }
-      }`})
-            console.log("Order: " + order);
-            res.status(200).json(order)
-        } catch (error) {
-            console.log("Error" + error);
-        }
+        const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+        singleOrder(req, res, session, client)
     })
     app.post('/api/orders', async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));
-        try {
-            const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
-            const { reverseValue, searchCategory, forwardCursor, backwardCursor, firstNumProd, lastNumProd } = req.body
-            console.log("forwardcursor", forwardCursor);
 
-            const { Order } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`);
-            // const test_session = await Shopify.Utils.loadCurrentSession(req, res);
-            const ordersCount = await Order.count({
-                session: session,
-                status: "any",
-            });
-            const variables = {
-                "numProds": 7,
-                "ForwardCursor": forwardCursor,
-                "BackwardCursor": backwardCursor
-            }
-            const data = await client.query({
-                data: {
-                    query: `query ($numProds: Int!, $ForwardCursor: String, $BackwardCursor: String) {
-                        orders(reverse:${reverseValue}, first: ${firstNumProd}, after: $ForwardCursor, last: ${lastNumProd}, before: $BackwardCursor, query:"lineItems.title:Eco Bag") {
-                          edges {
-                            cursor
-                            node {
-                              id
-                              totalPrice
-                              name
-                              email
-                              discountCode
-                              lineItems(first: 10) {
-                                nodes {
-                                  name
-                                  title
-                                  variantTitle
-                                  id
-                                }
-                              }
-                            }
-                          }
-                          pageInfo {
-                            startCursor
-                            hasNextPage
-                            hasPreviousPage
-                            endCursor
-                          }
-                        }
-                      }
-                      `,
-
-                    variables: variables
-                }
-
-            });
-            const ordersCount2 = {
-                count: 0
-            }
-            res.status(200).json({ data, ordersCount, success: true });
-
-        } catch (error) {
-            console.log("Error" + error);
-            res.status(200).json({ error, success: false });
-        }
+        const { Order } = await import(`@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`);
+        const client = new Shopify.Clients.Graphql(session.shop, session.accessToken);
+        allEcoOrders(req, res, session, client, Order)
     })
     app.get("/api/products/create", async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, app.get("use-online-tokens"));

@@ -1,13 +1,15 @@
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { getSessionToken } from "@shopify/app-bridge-utils"
-import { Button, DataTable, Pagination } from "@shopify/polaris";
+import { Badge, Button, Card, DataTable, Pagination, Tag } from "@shopify/polaris";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import '../Styles/Orders.css';
 import Loading from "./Loader/Loading";
 import NoOrdersFound from "./NoOrders/NoOrdersFound";
 import LoadError from "./Error/LoadError";
-
+import {
+    DiscountsMajor
+} from '@shopify/polaris-icons';
 const Orders = () => {
     const app = useAppBridge();
     const [orders, setOrders] = useState([]);
@@ -27,7 +29,7 @@ const Orders = () => {
     const [loadingSucceded, setloadingSucceded] = useState(true);
     const [noOrdersFound, setNoOrdersFound] = useState(false);
     const [error, seterror] = useState(false);
-console.log("noOrdersFound", noOrdersFound);
+    console.log("noOrdersFound", noOrdersFound);
     console.log("LoadingSucceded", loadingSucceded);
 
 
@@ -102,7 +104,7 @@ console.log("noOrdersFound", noOrdersFound);
             item.node.lineItems.nodes.map((i) => (<><h1>{i.title}</h1></>)),
         ],
         [
-            item.node.email === null? "Not Provided" : item.node.email,
+            item.node.email === null ? "Not Provided" : item.node.email,
         ],
         [
             item.node.totalPrice,
@@ -145,27 +147,8 @@ console.log("noOrdersFound", noOrdersFound);
         //     // }/>
         // ],
     ]));
-    const ProductID = {
-        id: 3937586544769
-    }
-    const getSingleOrder = async (SingleProdID) => {
-        const id = SingleProdID.split('/').splice(-1)
-        const token = await getSessionToken(app);
-        console.log("token:-", token);
-        const config = {
-            headers: {
-                Authorization: "Bearer " + token,
-            }
-        }
-        body: ProductID
-        try {
-            const { data } = await axios.get(`/api/order/${id}`, config);
-            console.log("Single Order orders", data)
-        } catch (error) {
-            console.log("Single Order Error", error);
-        }
 
-    }
+
 
     const getAllOrders = async (queryFilters) => {
         const token = await getSessionToken(app);
@@ -183,7 +166,7 @@ console.log("noOrdersFound", noOrdersFound);
         if (data.success === true) {
             setloadingSucceded(false);
         }
-        
+
         if (data.success === false) {
             setloadingSucceded(true);
             seterror(true)
@@ -208,7 +191,7 @@ console.log("noOrdersFound", noOrdersFound);
     }
     useEffect(() => {
         getAllOrders(queryFilters)
-        // getSingleOrder()
+
     }, [reverseValue, searchCategory, forwardCursor, backwardCursor, nextPage, prevPage, firstNumProd, lastNumProd])
     return (
         <>
@@ -223,48 +206,65 @@ console.log("noOrdersFound", noOrdersFound);
             </div>
 
 
-            {error === true ? <LoadError />:(<>
-            
-            {!loadingSucceded === false ? <Loading /> : (
-                <>
-                {!ordersCount ? (<NoOrdersFound />):(<>
+            {error === true ? <LoadError /> : (<>
 
-                    <div className="tableBlock">
-                        <DataTable columnContentTypes={
-                            [
-                                "text",
-                                "text",
-                                "text",
-                                "numeric"
-                            ]
-                        }
-                            headings={
-                                [
-                                    "Order",
-                                    "Ordered Items",
-                                    "Email",
-                                    "Total Price"
-                                ]
-                            }
-                            rows={rows2}
-                            footerContent={
-                                // `Showing ${pageNumber} of ${totalPages} pages`
-                                ` Page: ${pageNumber}`
-                            } />
-                        <div className="ordersPagination">
-                            <Pagination hasPrevious
-                                onPrevious={prevData}
-                                hasNext
-                                onNext={nextData} />
-                        </div>
+                {!loadingSucceded === false ? <Loading /> : (
+                    <>
+                        {!ordersCount ? (<NoOrdersFound />) : (<>
 
-                    </div>
+                            {/* <div className="tableBlock"> */}
+                                {/* <DataTable columnContentTypes={
+                                    [
+                                        "text",
+                                        "text",
+                                        "text",
+                                        "numeric"
+                                    ]
+                                }
+                                    headings={
+                                        [
+                                            "Order",
+                                            "Ordered Items",
+                                            "Email",
+                                            "Total Price"
+                                        ]
+                                    }
+                                    rows={rows2}
+                                    footerContent={
+                                        // `Showing ${pageNumber} of ${totalPages} pages`
+                                        ` Page: ${pageNumber}`
+                                    } /> */}
 
-                </>)}
+                                <div className="mediaCard">
+                                    {calculatedRows.map((item) => (
+                                        <div className="mainMediaBlock">
 
-                </>
-            )}
-                
+                                            <Card title={item.node.name} >
+                                                <div className="mediaData" >
+
+                                                    <p className="email">{item.node.email === null ? <p>Not Provided</p> : item.node.email}</p>
+                                                    <p className="totalPrice">{item.node.currencyCode && item.node.currencyCode} {item.node.totalPrice && item.node.totalPrice}</p>
+                                                    <div className="badges">{item.node.lineItems.nodes.map((i) => (<div className="badgeData"><Badge className="badge">{i.title}</Badge></div>))}</div>
+                                                    <>{item.node.discountCode === null ? <p>Null</p> : <Tag><DiscountsMajor />{item.node.discountCode}</Tag>}</>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="ordersPagination">
+                                    <Pagination hasPrevious
+                                        onPrevious={prevData}
+                                        hasNext
+                                        onNext={nextData} />
+                                </div>
+
+                            {/* </div> */}
+
+                        </>)}
+
+                    </>
+                )}
+
             </>)}
         </>
     )

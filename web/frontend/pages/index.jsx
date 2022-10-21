@@ -60,7 +60,7 @@ export default function HomePage() {
   })
 
   return (
-    <Page>
+    <Page fullWidth>
       <Layout>
         <Layout.Section>
           <Card sectioned>
